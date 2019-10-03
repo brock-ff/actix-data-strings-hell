@@ -2,8 +2,11 @@ use actix_web::{web, web::Path, App, HttpServer};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 
+type SyncHashMap = Arc<Mutex<HashMap<String, String>>>;
+type KeyValData = web::Data<SyncHashMap>;
+
 /// Use `Data<T>` extractor to access data in handler.
-fn index(data: web::Data<Arc<Mutex<HashMap<String, String>>>>, path: Path<String>) {
+fn index(data: KeyValData, path: Path<String>) {
     let game_id: String = path.into_inner();
     let mut chain_map = data.lock().unwrap();
     let blockchain_url = chain_map.get(&game_id);
