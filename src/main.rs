@@ -24,15 +24,13 @@ fn index(data: web::Data<Arc<MyData>>, path: Path<String>) {
 }
 
 fn main() {
-    let app = App::new()
-        // Store `MyData` in application storage.
-        .data(Arc::new(MyData {
-            chain_maps: Mutex::new(HashMap::new()),
-        }))
-        .service(web::resource("/{id}").route(web::get().to(index)));
-
     HttpServer::new(|| {
-        app
+        App::new()
+            // Store `MyData` in application storage.
+            .data(Arc::new(MyData {
+                chain_maps: Mutex::new(HashMap::new()),
+            }))
+            .service(web::resource("/{id}").route(web::get().to(index)))
     })
     .bind("127.0.0.1:1337")
     .expect("Cannot bind to port 1337 :(")
